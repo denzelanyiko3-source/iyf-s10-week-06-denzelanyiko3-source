@@ -87,43 +87,6 @@ Promise.all([getUserData(1), getUserData(2), getUserData(3)])
     });
 
 
-
-    // Callback Hell
-function getUserData(userId, callback) {
-    setTimeout(() => {
-        callback({ id: userId, name: "John" });
-    }, 1000);
-}
-
-function getUserPosts(userId, callback) {
-    setTimeout(() => {
-        callback([
-            { id: 1, title: "Post 1" },
-            { id: 2, title: "Post 2" }
-        ]);
-    }, 1000);
-}
-
-function getPostComments(postId, callback) {
-    setTimeout(() => {
-        callback([
-            { id: 1, text: "Great post!" },
-            { id: 2, text: "Thanks for sharing" }
-        ]);
-    }, 1000);
-}
-
-// The nightmare:
-getUserData(1, function(user) {
-    console.log("User:", user);
-    getUserPosts(user.id, function(posts) {
-        console.log("Posts:", posts);
-        getPostComments(posts[0].id, function(comments) {
-            console.log("Comments:", comments);
-            // Imagine 3 more levels deep...
-        });
-    });
-});
     // Build: Rewrite the callback hell example using async/await
 async function fetchUserData(userId) {
     try {
@@ -138,3 +101,288 @@ async function fetchUserData(userId) {
     }
 }
 
+
+fetchUserData(1);
+
+
+// DOM Elements
+
+const userInput = document.getElementById("user-id");
+const getUserBtn = document.getElementById("get-user");
+const getUsersBtn = document.getElementById("get-users");
+const getPostsBtn = document.getElementById("get-posts");
+const output = document.getElementById("output");
+
+
+// Reusable Fetch Function
+
+async function fetchData(url) {
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+
+  } catch (error) {
+    console.error(error);
+    output.innerHTML = "<p>Error fetching data</p>";
+  }
+}
+
+// Get Single User
+
+getUserBtn.addEventListener("click", async () => {
+  const id = userInput.value;
+
+  if (!id) {
+    output.innerHTML = "<p>Please enter a user ID</p>";
+    return;
+  }
+
+  const user = await fetchData(
+    `https://jsonplaceholder.typicode.com/users/${id}`
+  );
+
+  if (!user) return;
+
+  output.innerHTML = `
+    <h2>${user.name}</h2>
+    <p><strong>Email:</strong> ${user.email}</p>
+    <p><strong>City:</strong> ${user.address.city}</p>
+  `;
+});
+
+// Get All Users
+
+getUsersBtn.addEventListener("click", async () => {
+  const users = await fetchData(
+    "https://jsonplaceholder.typicode.com/users"
+  );
+
+  if (!users) return;
+
+  let html = "<h2>All Users</h2>";
+
+  users.forEach(user => {
+    html += `
+      <div style="margin-bottom:10px;">
+        <strong>${user.name}</strong><br>
+        ${user.email}
+      </div>
+    `;
+  });
+
+  output.innerHTML = html;
+});
+
+
+// Get Posts for User 1
+
+getPostsBtn.addEventListener("click", async () => {
+  const posts = await fetchData(
+    "https://jsonplaceholder.typicode.com/users/1/posts"
+  );
+
+  if (!posts) return;
+
+  let html = "<h2>User 1 Posts</h2>";
+
+  posts.forEach(post => {
+    html += `
+      <div style="margin-bottom:15px;">
+        <h4>${post.title}</h4>
+        <p>${post.body}</p>
+      </div>
+    `;
+  });
+
+  output.innerHTML = html;
+});
+
+
+
+
+
+
+
+const loading = document.getElementById("loading");
+const errorDiv = document.getElementById("error");
+const container = document.getElementById("users-container");
+
+async function loadUsers() {
+    try {
+        showLoading();
+        
+        const response = await fetch("https://jsonplaceholder.typicode.com/users");
+        
+        if (!response.ok) {
+            throw new Error("Failed to fetch users");
+        }
+        
+        const users = await response.json();
+        displayUsers(users);
+        
+    } catch (error) {
+        showError(error.message);
+    } finally {
+        hideLoading();
+    }
+}
+
+function showLoading() {
+    loading.classList.remove("hidden");
+    container.innerHTML = "";
+}
+
+function hideLoading() {
+    loading.classList.add("hidden");
+}
+
+function showError(message) {
+    errorDiv.textContent = `Error: ${message}`;
+    errorDiv.classList.remove("hidden");
+}
+
+function displayUsers(users) {
+    container.innerHTML = users.map(user => `
+        <div class="user-card">
+            <h2>${user.name}</h2>
+            <p>📧 ${user.email}</p>
+            <p>🏢 ${user.company.name}</p>
+            <p>📍 ${user.address.city}</p>
+        </div>
+    `).join("");
+}
+
+// Initialize
+loadUsers();
+
+// Build: Create a form that submits a new post and displays the result.
+
+const postForm = document.getElementById("post-form");
+
+postForm.addEventListener("submit", async (e) => {
+  e.preventDefault(); 
+    const title = document.getElementById("post-title").value;
+    const body = document.getElementById("post-body").value;
+    const userId = document.getElementById("post-user-id").value;
+    const newPost = {
+      title,
+      body,
+      userId
+    };
+
+    try {
+        const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newPost)
+        });
+        if (!response.ok) {
+            throw new Error("Failed to create post");
+        }
+        const createdPost = await response.json();
+        output.innerHTML = `
+            <h2>Post Created</h2>
+            <p><strong>Title:</strong> ${createdPost.title}</p>
+            <p><strong>Body:</strong> ${createdPost.body}</p>
+            <p><strong>User ID:</strong> ${createdPost.userId}</p>
+        `;
+    } catch (error) {
+        showError(error.message);
+    }
+});
+
+// live search
+let allUsers = [];
+
+async function loadAllUsers() {
+  allUsers = await fetchData("https://jsonplaceholder.typicode.com/users");
+
+
+displayUsers(allUsers);
+
+setupSearch();
+setupSort();
+setupcityFilter();
+
+}
+
+function displayUsers(users) {
+    const container = document.getElementById("users-list");
+    container.innerHTML = "";
+    users.forEach(user => {
+        const userDiv = document.createElement("div");
+        userDiv.innerHTML = `
+            <h3>${user.name}</h3>
+            <p>📧 ${user.email}</p>
+            <p>🏢 ${user.company.name}</p>
+            <p>📍 ${user.address.city}</p>
+        `;
+        container.appendChild(userDiv);
+    });
+}
+
+function setupSearch() {
+    const searchInput = document.getElementById("search-input");
+
+    searchInput.addEventListener("input", () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredUsers = allUsers.filter(user => 
+            user.name.toLowerCase().includes(searchTerm) ||
+            user.email.toLowerCase().includes(searchTerm) ||
+            user.company.name.toLowerCase().includes(searchTerm) ||
+            user.address.city.toLowerCase().includes(searchTerm)
+        );
+        displayUsers(filteredUsers);
+    });
+}
+
+function setupSort() {
+    const sortSelect = document.getElementById("sort-select");
+
+    sortSelect.addEventListener("change", () => {
+        const sortBy = sortSelect.value;
+        const sortedUsers = [...allUsers].sort((a, b) => {
+            if (sortBy === "name") {
+                return a.name.localeCompare(b.name);
+            } else if (sortBy === "email") {
+                return a.email.localeCompare(b.email);
+            } else if (sortBy === "company") {
+                return a.company.name.localeCompare(b.company.name);
+            } else if (sortBy === "city") {
+                return a.address.city.localeCompare(b.address.city);
+            }
+            return 0;
+        });
+        displayUsers(sortedUsers);
+    });
+}
+
+function setupcityFilter() {
+    const citySelect = document.getElementById("city-select");
+    const cities = [...new Set(allUsers.map(user => user.address.city))];
+    cities.forEach(city => {
+        const option = document.createElement("option");
+        option.value = city;
+        option.textContent = city;
+        citySelect.appendChild(option);
+    });
+
+    citySelect.addEventListener("change", () => {
+        const selectedCity = citySelect.value;
+        if (selectedCity === "all") {
+            displayUsers(allUsers);
+        } else {
+            const filteredUsers = allUsers.filter(user => user.address.city === selectedCity);
+            displayUsers(filteredUsers);
+        }
+    });
+    }
+
+    init();

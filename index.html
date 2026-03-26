@@ -8,7 +8,29 @@
     <script src="main.js"></script>
 </head>
 <body>
-    <h1>Check JS</h1>
-    <button id="myButton">Click me</button>
+    <div id="app">
+    <h1>User Directory</h1>
+    <div id="loading">Loading...</div>
+    <div id="error" class="hidden"></div>
+    <div id="users-container"></div>
+
+    <input id="search" placeholder="Search by name or email">
+
+    <select id="sort">
+        <option value="">Sort By</option>
+        <option value="name-asc">Name (A-Z)</option>
+        <option value="name-desc">Name (Z-A)</option>
+        <option value="email-asc">Email (A-Z)</option>
+        <option value="email-desc">Email (Z-A)</option>
+    </select>
+
+    <select id="city">
+        <option value="all">All Cities</option>
+    </select>
+    <div id="user-list"></div>
+    
+        
 </body>
 </html>
+
+
