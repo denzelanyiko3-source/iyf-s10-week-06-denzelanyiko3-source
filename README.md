@@ -6,7 +6,8 @@
 - **Date:** March 25, 2026
 
 ## Project Description
-Brief description of what you built and why.
+Master asynchronous programming in JavaScript using callbacks, Promises, async/await, and API integration. This week focuses on handling real-world data and building responsive user experiences.
+
 
 ## Technologies Used
 - HTML5
