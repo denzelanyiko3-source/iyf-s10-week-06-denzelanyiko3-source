@@ -6,17 +6,16 @@
 - **Date:** March 25, 2026
 
 ## Project Description
-Mastering asynchronous programming in JavaScript using callbacks, Promises, async/await, and API integration. This focuses on handling real-world data and building responsive user experiences.
-
+Brief description of what you built and why.
 
 ## Technologies Used
 - HTML5
 - JavaScript
 
 ## Features
-- Weather Dashboard using OpenWeatherMap API
-- Completed async exercises from Lesson 11 (callbacks, Promise chaining, async/await)
-- Completed API exercises from Lesson 12 (fetching, error handling, loading states)
+- Feature 1
+- Feature 2
+- Feature 3
 
 ## How to Run
 1. Clone this repository
