@@ -31,8 +31,4 @@ Promises and async & wait are more easier to use than Callbacks.
 ## Challenges Faced
 The JavaScript code is soo long to write and one mistake can destroy everything.
 
-## Screenshots (optional)
-![Screenshot description](path/to/screenshot.png)
 
-## Live Demo (if deployed)
-[View Live Demo](https://your-deployed-url.com)
