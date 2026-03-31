@@ -12,11 +12,11 @@ Master asynchronous programming in JavaScript using callbacks, Promises, async/a
 ## Technologies Used
 - HTML5
 - JavaScript
-
+- CSS
 ## Features
-- Feature 1
-- Feature 2
-- Feature 3
+- Weather Dashboard using OpenWeatherMap API
+- Completed async exercises from Lesson 11 (callbacks, Promise chaining, async/await)
+- Completed API exercises from Lesson 12 (fetching, error handling, loading states)
 
 ## How to Run
 1. Clone this repository
