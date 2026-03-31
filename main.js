@@ -260,8 +260,9 @@ function displayUsers(users) {
 // Initialize
 loadUsers();
 
-// Build: Create a form that submits a new post and displays the result.
 
+
+// Build: Create a form that submits a new post and displays the result
 const postForm = document.getElementById("post-form");
 
 postForm.addEventListener("submit", async (e) => {
@@ -386,3 +387,24 @@ function setupcityFilter() {
     }
 
     init();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
